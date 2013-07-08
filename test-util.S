@@ -1,19 +1,23 @@
 .section .text, "ax"
+
 .global _start
 _start:
-# Attempt to initialize the stack?
-#adr     x1, stack_addr
-#ldr     x1, [x1]
-#mov     sp, x1
+	bl	init_stack
 
-ldr     w1, =hello
-bl      log
-movz    w0, #0x18    /* SWI: Exit     */
-hlt     #0xf000
-b       .            /* Infinite loop */
+test:	ldr	x1, =hello
+	bl	log
 
-hello:
-  .ascii "\nHello, world!\n"
+exit:	movz	w0, #0x18	/* Exit */
+	hlt	#0xf000
+	b	.
 
-stack_addr:
-  .quad  0x0000000088000000
+init_stack:
+	adr	x29, stack
+	ldr	x29, [x29]
+	mov	sp, x29
+	ret
+
+hello:	.ascii "Hello, world!\n\0"
+ 
+.align 2
+stack:	.quad 0x0000000088000000
