@@ -9,5 +9,8 @@ hello.axf: hello.o
 %.o: %.S
 	as $< -o $@
 
+run: test-util.axf
+	armv8 --image test-util.axf
+
 clean:
 	rm -f *.o hello.axf test-util.axf
